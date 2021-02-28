@@ -1,42 +1,66 @@
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/client';
+import { Box, Button, Heading, Container } from "@chakra-ui/react"
+import { ArrowForwardIcon  } from '@chakra-ui/icons'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
+import LoadingSpinner from '../components/LoadingSpinner';
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
-  const [ session, loading ] = useSession()
-
+const HomepageView = () => {
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Taste Lynx</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        {!session && <>
-          Not signed in <br/>
-          <button onClick={() => signIn("spotify")}>Sign in</button>
-        </>}
-        {session && <>
-          Signed in as {session.user.email} <br/>
-          <button onClick={() => signOut()}>Sign out</button>
-        </>}
+      <Box
+        backgroundImage="url('/images/vinyl.jpg')"
+        backgroundSize="cover"
+        backgroundPosition="center"
+        backgroundRepeat="no-repeat"
+      >
+        <Container
+          maxW="container.lg"
+          pt="100px"
+          pb="200px"
+          px="8"
+        >
+          <Heading as="h1" size="4xl" my="4">
+            You've got great taste.
+          </Heading>
+          <Heading as="h2" size="2xl" my="4">
+            Make sure it stays up to date.
+          </Heading>
 
-        <h1 className={styles.title}>
-          You've got great taste. Ensure it stays up to date.
-        </h1>
-      </main>
+          <Button
+            onClick={() => signIn("spotify")}
+            size="lg"
+            colorScheme="teal"
+            mt="6"
+          >
+            Get Started
+            <ArrowForwardIcon />
+          </Button>
+        </Container>
+      </Box>
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
+        
       </footer>
-    </div>
+    </>
+  )
+}
+
+export default function Home() {
+  const [ session, loading ] = useSession();
+  const router = useRouter();
+
+  if (!loading && session && typeof window !== 'undefined') {
+    router.push('/dashboard');
+  }
+
+  return (
+    loading ? <LoadingSpinner /> : <HomepageView />
   )
 }
