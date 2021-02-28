@@ -1,11 +1,13 @@
-import { signOut, useSession } from 'next-auth/client';
-import { Button, Avatar } from "@chakra-ui/react"
-import LoadingSpinner from '../components/LoadingSpinner';
+import { useSession } from 'next-auth/client';
+import LoadingSpinner from '@components/LoadingSpinner';
 import { useRouter } from 'next/router'
-import styles from '../styles/Home.module.css'
 import useSWR from 'swr';
-import fetcher from '../lib/fetcher';
-import { IArtist } from '../pages/api/spotify/top-artists';
+import fetcher from '@lib/fetcher';
+import { IArtist } from '@api/spotify/top-artists';
+import Footer from '@components/Footer';
+import Layout from '@components/Layout';
+
+
 
 export default function Dashboard() {
   const [ session, loading ] = useSession();
@@ -23,14 +25,9 @@ export default function Dashboard() {
   }
 
   return (
-    loading ? <LoadingSpinner /> : (
-      <div className={styles.container}>
-        <main className={styles.main}>
-          {session && <>
-            <Avatar size="xl" src={session.user.image!} />
-            Signed in as {session.user.email} <br/>
-            <Button onClick={() => signOut()}>Sign out</Button>
-          </>}
+    <Layout title="Dashboard">
+      { loading ? <LoadingSpinner /> : (
+        <div>
           { data.map(artist => {
             return (
               <div key={artist.name}>
@@ -38,12 +35,9 @@ export default function Dashboard() {
               </div>
             );
           }) }
-        </main>
-  
-        <footer className={styles.footer}>
-          
-        </footer>
-      </div>
-    )
+          <Footer />
+        </div>
+      )}
+    </Layout>
   )
 }

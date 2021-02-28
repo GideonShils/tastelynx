@@ -1,6 +1,6 @@
 import { NextApiRequest } from "next"
 import SpotifyWebApi from 'spotify-web-api-node';
-import { getSpotifyOauthToken } from '../lib/db';
+import { getSpotifyOauthToken } from '@lib/db';
 
 const spotifyApi = new SpotifyWebApi();
 

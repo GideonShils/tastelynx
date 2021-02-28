@@ -1,4 +1,4 @@
-import { getTopArtists } from '../../../lib/spotify';
+import { getTopArtists } from '@lib/spotify';
 import { NextApiRequest, NextApiResponse } from "next"
 
 export interface IArtist {

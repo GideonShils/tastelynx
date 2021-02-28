@@ -1,8 +1,8 @@
 import { getSession } from 'next-auth/client';
 import { NextApiRequest } from "next";
 import mongoose from 'mongoose';
-import Account from '../models/Account';
-import Session from '../models/Session';
+import Account from '@models/Account';
+import Session from '@models/Session';
 
 export const getSpotifyOauthToken = async (req: NextApiRequest) => {
   await connectToDatabase();
