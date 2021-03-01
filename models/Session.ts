@@ -1,7 +1,7 @@
-import { model, Schema, Document, Types, models } from 'mongoose';
+import { model, Schema, Document, Types, models, Model } from 'mongoose';
 
 interface ISession extends Document {
-  userId: Types.ObjectId;
+  userId: string;
   expires: number;
   sessionToken: string;
   accessToken: string;
@@ -30,4 +30,12 @@ const SessionSchema = new Schema({
   },
 })
 
-export default models.Session || model<ISession>('Session', SessionSchema);
+const Session = models.Session || model<ISession>('Session', SessionSchema);
+
+export default Session;
+
+export const findSession = async (accessToken: string): Promise<ISession | null> => {
+  return Session.findOne({
+    accessToken: accessToken
+  })
+};

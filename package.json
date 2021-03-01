@@ -15,6 +15,7 @@
     "@types/next-auth": "^3.1.24",
     "@types/spotify-web-api-node": "^5.0.0",
     "framer-motion": "^3.7.0",
+    "moment": "^2.29.1",
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.18",
     "next": "10.0.7",

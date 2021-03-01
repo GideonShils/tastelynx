@@ -1,15 +1,16 @@
-import { model, Schema, Document, Types, models } from 'mongoose';
+import { model, Schema, Document, models } from 'mongoose';
+import moment from 'moment';
 
-interface IAccount extends Document {
+export interface IAccount extends Document {
   compoundId: string;
-  userId: Types.ObjectId;
+  userId: string;
   providerType: string;
   providerAccountId: string;
   refreshToken: string;
   accessToken: string;
   accessTokenExpires: number;
   createdAt: number;
-  updatedAt: number;
+  updatedAt: string;
 }
 
 const AccountSchema: Schema = new Schema({
@@ -38,8 +39,30 @@ const AccountSchema: Schema = new Schema({
     type: Number,
   },
   updatedAt: {
-    type: Number,
+    type: String,
   },
 })
 
-export default models.Account || model<IAccount>('Account', AccountSchema);
+
+const Account = models.Account || model<IAccount>('Account', AccountSchema);
+
+export default Account;
+
+export const findAccount = async (userId: string): Promise<IAccount | null> => {
+  return Account.findOne({
+    userId: userId
+  })
+};
+
+export const addNewAccessToken = async (account: IAccount, newAccessToken: string,) => {
+  account.accessToken = newAccessToken;
+  account.updatedAt = moment().format();
+
+  console.log(account);
+
+  const result = await account.save();
+
+  console.log(result);
+
+  return result;
+}
