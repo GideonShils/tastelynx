@@ -28,8 +28,6 @@ export const refreshSpotifyOauthToken = async (account: IAccount) => {
 
   const tokenJson = await tokenResponse.json();
 
-  console.log(tokenJson);
-
   await addNewAccessToken(account, tokenJson.access_token);
 
   return tokenJson.access_token;

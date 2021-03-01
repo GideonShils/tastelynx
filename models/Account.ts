@@ -58,11 +58,5 @@ export const addNewAccessToken = async (account: IAccount, newAccessToken: strin
   account.accessToken = newAccessToken;
   account.updatedAt = moment().format();
 
-  console.log(account);
-
-  const result = await account.save();
-
-  console.log(result);
-
-  return result;
+  return await account.save();
 }

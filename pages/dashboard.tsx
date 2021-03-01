@@ -4,10 +4,9 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr';
 import fetcher from '@lib/fetcher';
 import { IArtist } from '@api/spotify/top-artists';
-import Footer from '@components/Footer';
 import Layout from '@components/Layout';
-
-
+import { Box, SimpleGrid, Container } from "@chakra-ui/react"
+import ArtistCard from '@components/dashboard/ArtistCard';
 
 export default function Dashboard() {
   const [ session, loading ] = useSession();
@@ -27,15 +26,15 @@ export default function Dashboard() {
   return (
     <Layout title="Dashboard">
       { loading ? <LoadingSpinner /> : (
-        <div>
-          { data.map(artist => {
-            return (
-              <div key={artist.name}>
-                {artist.name}
-              </div>
-            );
-          }) }
-        </div>
+        <Box bg="gray.100">
+          <Container maxW="container.lg" py="4">
+            <SimpleGrid columns={4} spacing={4}>
+              { data.map(artist => {
+                return <ArtistCard artist={artist} />
+              }) }
+            </SimpleGrid>
+          </Container>
+        </Box>
       )}
     </Layout>
   )

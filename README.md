@@ -14,12 +14,10 @@
 * [Chakra UI](https://chakra-ui.com/)
 
 ## Already setup
-- [x] Authentication
+- [x] Authentication + refresh tokens
 - [x] Db storage
 - [x] Spotify api access
 ## Todo
-- [ ] Setup refresh tokens
-- [ ] Look into whether to use JWTs
 - [ ] Search for artists
 - [ ] Save favorite artists
 - [ ] Design homepage

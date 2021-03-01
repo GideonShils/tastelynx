@@ -1,4 +1,3 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Text, Avatar, Container, Flex, Spacer, Button, Heading, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react"
 import { signIn } from 'next-auth/client';
 import { signOut, useSession } from 'next-auth/client';
