@@ -9,7 +9,8 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem
+  MenuItem,
+  Image
 } from '@chakra-ui/react';
 import { signIn } from 'next-auth/client';
 import { signOut, useSession } from 'next-auth/client';
@@ -57,6 +58,7 @@ const NavBar: React.FC<INavBarProps> = ({ isDashboard }) => {
     <nav>
       <Container maxW={isDashboard ? '' : 'container.lg'} py="6">
         <Flex align="center">
+          <Image src="/images/logo.png" width={50} mx={2} />
           <Heading as="h3" size="lg">
             Taste Lynx
           </Heading>

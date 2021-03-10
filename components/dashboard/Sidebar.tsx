@@ -4,7 +4,6 @@ import { IoMdPerson } from 'react-icons/io';
 import { Page } from '@constants/dashboardConstants';
 import { RepeatIcon } from '@chakra-ui/icons';
 
-
 const options = [
   {
     title: 'Discover Artists',

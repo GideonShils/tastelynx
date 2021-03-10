@@ -1,11 +1,16 @@
+<p align="center">
+    <a href="https://tastelynx.com" rel="noopener" target="_blank">
+        <img width="50" src="./public/images/logo.png" alt="Taste Lynx logo">
+    </a>
+</p>
 <h1 align="center">Taste Lynx</h1>
 <p align="center">Automagically recieve new releases from your favorite spotify artists.</p>
 
 ## Features
 
-- Search your tweets based on keywords or date ranges
-- Select and bulk delete tweets
-- Delete every tweet that matches a search query
+- See artist suggestions based on your spotify preferences
+- Search for and save your favorite artists
+- Get new releases sent to a custom Spotify playlist every day
 
 ## Tools / Technologies used
 
