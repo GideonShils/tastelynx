@@ -14,33 +14,15 @@ export interface IAccount extends Document {
 }
 
 const AccountSchema: Schema = new Schema({
-  compoundId: {
-    type: String,
-  },
-  userId: {
-    type: Schema.Types.ObjectId,
-  },
-  providerType: {
-    type: String,
-  },
-  providerAccountId: {
-    type: String,
-  },
-  refreshToken: {
-    type: String,
-  },
-  accessToken: {
-    type: String,
-  },
-  accessTokenExpires: {
-    type: Number,
-  },
-  createdAt: {
-    type: Number,
-  },
-  updatedAt: {
-    type: String,
-  },
+  compoundId: String,
+  userId: Schema.Types.ObjectId,
+  providerType: String,
+  providerAccountId: String,
+  refreshToken: String,
+  accessToken: String,
+  accessTokenExpires: String,
+  createdAt: String,
+  updatedAt: String,
 })
 
 
@@ -58,5 +40,5 @@ export const addNewAccessToken = async (account: IAccount, newAccessToken: strin
   account.accessToken = newAccessToken;
   account.updatedAt = moment().format();
 
-  return await account.save();
+  return account.save();
 }

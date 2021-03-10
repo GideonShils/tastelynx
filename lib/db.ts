@@ -1,80 +1,40 @@
-import { getSession } from 'next-auth/client';
-import { NextApiRequest } from "next";
-import mongoose from 'mongoose';
-import moment from 'moment';
-import querystring from 'querystring';
+import { removeArtistFromConfig, saveArtistToConfig, getConfig } from './../models/Config';
+import { Session } from 'next-auth/client';
+import connectToDatabase, { getUserIdFromSession } from './dbUtils';
+import { IArtist } from '@lib/spotify';
 
-import { IAccount, findAccount, addNewAccessToken } from '@models/Account';
-import { findSession } from '@models/Session';
-
-const SPOTIFY_AUTHORIZATION_URL = "https://accounts.spotify.com/api/token";
-
-export const refreshSpotifyOauthToken = async (account: IAccount) => {
-  const encodedClientString = Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString('base64');
-
-  const body = querystring.stringify({
-    grant_type: 'refresh_token',
-    refresh_token: account.refreshToken,
-  });
+export const saveArtist = async (session: Session, artist: IArtist) => {
+  await connectToDatabase()
   
-  const tokenResponse = await fetch(SPOTIFY_AUTHORIZATION_URL, {
-    headers: {
-      "Authorization": `Basic ${encodedClientString}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    method: "POST",
-    body: body
-  });
-
-  const tokenJson = await tokenResponse.json();
-
-  await addNewAccessToken(account, tokenJson.access_token);
-
-  return tokenJson.access_token;
+  const userId = await getUserIdFromSession(session);
+  await saveArtistToConfig(userId, artist);
 }
 
-export const getSpotifyOauthToken = async (req: NextApiRequest) => {
-  await connectToDatabase();
+export const removeArtist = async (session: Session, artist: IArtist) => {
+  await connectToDatabase()
+  
+  const userId = await getUserIdFromSession(session);
+  await removeArtistFromConfig(userId, artist);
+}
 
-  const userSession = await getSession({ req });
+export const getFavoriteArtists = async (session: Session): Promise<IArtist[]> => {
+  await connectToDatabase()
+  
+  const userId = await getUserIdFromSession(session);
+  const config = await getConfig(userId);
 
-  if (userSession?.accessToken) {
-    const accessToken = userSession.accessToken
-    
-    const sessionObject = await findSession(accessToken)
+  let artists: IArtist[];
 
-    if (sessionObject) {
-      const account = await findAccount(sessionObject.userId);
-
-      if (account) {
-        const lastTokenIssueDate = moment(account.updatedAt);
-        const now = moment();
-
-        if (lastTokenIssueDate.add(59, 'minutes') < now) {
-          return refreshSpotifyOauthToken(account);
-        } else {
-          return account.accessToken;
-        }
+  if (config) {
+    artists = config.artists.map(artist => {
+      return {
+        name: artist.name,
+        image: artist.image
       }
-    }
-  }
-
-  throw new Error('No access token found');
-}
-
-export default async function connectToDatabase() {
-  if (mongoose.connection.readyState >= 1) {
-    return
-  }
-
-  if (process.env.DB_URI) {
-    return mongoose.connect(process.env.DB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-    })
+    });
   } else {
-    throw new Error('No DB_URI is defined');
+    artists = [];
   }
+
+  return artists;
 }

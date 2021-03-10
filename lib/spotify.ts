@@ -1,17 +1,30 @@
-import { NextApiRequest } from "next"
 import SpotifyWebApi from 'spotify-web-api-node';
-import { getSpotifyOauthToken } from '@lib/db';
+import { getSpotifyOauthToken } from '@lib/dbUtils';
+import { Session } from 'next-auth/client';
+
+export interface IArtist {
+  name: string;
+  image: string;
+  spotifyId: String;
+}
 
 const spotifyApi = new SpotifyWebApi();
 
-const setAuthToken = async (req: NextApiRequest) => {
-  const spotifyOauthToken = await getSpotifyOauthToken(req);
+const setAuthToken = async (session: Session) => {
+  const spotifyOauthToken = await getSpotifyOauthToken(session);
   spotifyApi.setAccessToken(spotifyOauthToken);
 }
 
-export const getTopArtists = async (req: NextApiRequest) => {
-  await setAuthToken(req);
+export const getTopArtists = async (session: Session) => {
+  await setAuthToken(session);
 
   const response = await spotifyApi.getMyTopArtists();
-  return response.body;
+  
+  const artists: IArtist[] = response.body.items.map((artist) => ({
+    name: artist.name,
+    image: artist.images[0].url,
+    spotifyId: artist.id,
+  }));
+
+  return artists
 }

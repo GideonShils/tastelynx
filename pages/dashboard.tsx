@@ -1,41 +1,60 @@
-import { useSession } from 'next-auth/client';
-import LoadingSpinner from '@components/LoadingSpinner';
-import { useRouter } from 'next/router'
-import useSWR from 'swr';
-import fetcher from '@lib/fetcher';
-import { IArtist } from '@api/spotify/top-artists';
 import Layout from '@components/Layout';
-import { Box, SimpleGrid, Container } from "@chakra-ui/react"
-import ArtistCard from '@components/dashboard/ArtistCard';
+import { Flex, Box } from "@chakra-ui/react"
+import { getTopArtists, IArtist } from '@lib/spotify';
+import { GetServerSideProps } from 'next'
+import { getSession } from 'next-auth/client';
+import { useState } from 'react';
+import DiscoverArtists from '@components/dashboard/DiscoverArtists';
+import SavedArtists from '@components/dashboard/SavedArtists';
+import Sidebar from '@components/dashboard/Sidebar';
+import { Page } from '@constants/dashboardConstants';
+import { getFavoriteArtists } from '@lib/db';
 
-export default function Dashboard() {
-  const [ session, loading ] = useSession();
-  const router = useRouter();
-
-  if (!loading && !session && typeof window !== 'undefined') {
-    router.push('/');
-  }
-
-  const { data, error } = useSWR<IArtist[]>('/api/spotify/top-artists', fetcher)
+interface IDashboardProps {
+  topArtists: IArtist[],
+  savedArtists: IArtist[]
+}
 
 
-  if (!data) {
-    return null;
-  }
+const Dashboard: React.FC<IDashboardProps> = ({ topArtists, savedArtists }) => {
+  const [activePage, setActivePage] = useState(Page.DISCOVER_ARTISTS);
 
   return (
-    <Layout title="Dashboard">
-      { loading ? <LoadingSpinner /> : (
-        <Box bg="gray.100">
-          <Container maxW="container.lg" py="4">
-            <SimpleGrid columns={4} spacing={4}>
-              { data.map(artist => {
-                return <ArtistCard artist={artist} />
-              }) }
-            </SimpleGrid>
-          </Container>
+    <Layout title="Dashboard" isDashboard>
+      <Flex>
+        <Sidebar activePage={activePage} setActivePage={setActivePage} />
+        <Box bg="gray.100" flex="1">
+          { activePage == Page.DISCOVER_ARTISTS
+            ? <DiscoverArtists artists={topArtists} />
+            : <SavedArtists artists={savedArtists}/>
+          }
         </Box>
-      )}
+      </Flex>
     </Layout>
   )
+}
+
+export default Dashboard;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  const topArtists = await getTopArtists(session);
+  const savedArtists = await getFavoriteArtists(session);
+
+  return {
+    props: {
+      topArtists,
+      savedArtists
+    }
+  }
 }

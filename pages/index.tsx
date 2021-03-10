@@ -1,6 +1,5 @@
 import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router'
-import LoadingSpinner from '@components/LoadingSpinner';
 import Homepage from '@components/homepage/Homepage';
 
 export default function Home() {
@@ -11,9 +10,5 @@ export default function Home() {
     router.push('/dashboard');
   }
 
-  return (
-    <>
-    { loading ? <LoadingSpinner /> : <Homepage /> }
-    </>
-  )
+  return <Homepage />
 }

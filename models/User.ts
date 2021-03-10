@@ -9,18 +9,10 @@ interface IUser extends Document {
 
 
 const UserSchema: Schema = new Schema({
-  name: {
-    type: String,
-  },
-  image: {
-    type: String,
-  },
-  createdAt: {
-    type: Number,
-  },
-  updatedAt: {
-    type: Number,
-  },
+  name: String,
+  image: String,
+  createdAt: Number,
+  updatedAt: Number,
 })
 
 export default models.User || model<IUser>('User', UserSchema);

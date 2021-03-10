@@ -22,7 +22,8 @@
       "@components/*": ["components/*"],
       "@lib/*": ["lib/*"],
       "@api/*": ["pages/api/*"],
-      "@models/*": ["models/*"]
+      "@models/*": ["models/*"],
+      "@constants/*": ["constants/*"]
     }
   },
   "include": [

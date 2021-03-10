@@ -24,7 +24,7 @@
 - [ ] Cron job to check for releases every day
 
 ## How to run locally
-To run deletrius locally, clone the repository, move to the root directory, and run:
+To run taste lynx locally, clone the repository, move to the root directory, and run:
 
 `yarn install`
 

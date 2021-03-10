@@ -2,12 +2,12 @@ import { Text, Avatar, Container, Flex, Spacer, Button, Heading, Menu, MenuButto
 import { signIn } from 'next-auth/client';
 import { signOut, useSession } from 'next-auth/client';
 
-interface LoggedInProps {
+interface ILoggedInProps {
   image: string,
   name: string,
 }
 
-const LoggedIn: React.FC<LoggedInProps> = ({ image, name }) => {
+const LoggedIn: React.FC<ILoggedInProps> = ({ image, name }) => {
   return (
     <Flex align="center">
       <Text>
@@ -35,7 +35,11 @@ const LoggedOut = () => {
   )
 }
 
-const NavBar = () => {
+interface INavBarProps {
+  isDashboard?: boolean;
+}
+
+const NavBar: React.FC<INavBarProps> = ({ isDashboard }) => {
   const [ session, loading ] = useSession();
 
   const userSection = session ? (
@@ -47,7 +51,7 @@ const NavBar = () => {
 
   return (
     <nav>
-      <Container maxW="container.lg" py="6">
+      <Container maxW={ isDashboard ? "" : "container.lg"} py="6">
         <Flex align="center">
           <Heading as="h3" size="lg">
             Taste Lynx
