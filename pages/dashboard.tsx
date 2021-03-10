@@ -21,7 +21,6 @@ const Dashboard: React.FC<IDashboardProps> = ({ topArtists, savedArtists }) => {
   const router = useRouter();
 
   const refreshData = () => {
-    console.log('triggering refrresh');
     router.replace(router.asPath);
   };
 
