@@ -3,12 +3,13 @@ import ArtistCard from '@components/dashboard/ArtistCard';
 import { IArtist } from '@lib/spotify';
 
 interface IDiscoverArtistProps {
-  artists: IArtist[]
+  artists: IArtist[];
+  refreshData: () => void;
 }
 
-const DiscoverArtists: React.FC<IDiscoverArtistProps> = ({ artists }) => {
-  const onSaveClick = (artist: IArtist) => {
-    fetch(`/api/artists/${artist.name}`, {
+const DiscoverArtists: React.FC<IDiscoverArtistProps> = ({ artists, refreshData }) => {
+  const onSaveClick = async (artist: IArtist) => {
+    await fetch(`/api/artists/${artist.name}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -17,6 +18,9 @@ const DiscoverArtists: React.FC<IDiscoverArtistProps> = ({ artists }) => {
         artist: artist
       })
     })
+
+    console.log('refreshing from discover');
+    refreshData();
   }
 
   return (

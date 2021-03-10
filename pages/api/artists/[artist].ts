@@ -19,5 +19,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("Invalid request method");
   }
 
-  return res.status(200);
+  res.status(200).end();
 };

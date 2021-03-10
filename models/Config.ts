@@ -8,7 +8,11 @@ export interface IConfig extends Document {
 }
 
 const ConfigSchema: Schema = new Schema({
-  artists: [{name: String, image: String, spotifyId: String}],
+  artists: [{
+    name: String,
+    image: String,
+    spotifyId: String
+  }],
   userId: String,
   playlistId: String,
 })
@@ -54,10 +58,8 @@ export const removeArtistFromConfig = async (userId: String, artist: IArtist): P
   if (!existingConfig) {
     throw new Error("No existing configuration was found for this user")
   }
-/*
-  existingConfig.artists.id
-  const oldArtist = existingConfig.artists.find(existingArtist => existingArtist.artistName == artist.artistName);
-  oldArtist*/
+
+  existingConfig.artists = existingConfig.artists.filter(existingArtist => existingArtist.spotifyId != artist.spotifyId);
 
   return existingConfig.save();
 }

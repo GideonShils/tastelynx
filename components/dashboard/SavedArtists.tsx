@@ -3,12 +3,13 @@ import ArtistCard from '@components/dashboard/ArtistCard';
 import { IArtist } from '@lib/spotify';
 
 interface ISavedArtistProps {
-  artists: IArtist[]
+  artists: IArtist[];
+  refreshData: () => void;
 }
 
-const SavedArtists: React.FC<ISavedArtistProps> = ({ artists }) => {
-  const onRemoveClick = (artist: IArtist) => {
-    fetch(`/api/artists/${artist.name}`, {
+const SavedArtists: React.FC<ISavedArtistProps> = ({ artists, refreshData }) => {
+  const onRemoveClick = async (artist: IArtist) => {
+    await fetch(`/api/artists/${artist.name}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -17,6 +18,9 @@ const SavedArtists: React.FC<ISavedArtistProps> = ({ artists }) => {
         artist: artist
       })
     })
+
+    console.log('refreshing from saved');
+    refreshData();
   }
 
   return (

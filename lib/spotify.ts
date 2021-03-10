@@ -5,7 +5,7 @@ import { Session } from 'next-auth/client';
 export interface IArtist {
   name: string;
   image: string;
-  spotifyId: String;
+  spotifyId: string;
 }
 
 const spotifyApi = new SpotifyWebApi();

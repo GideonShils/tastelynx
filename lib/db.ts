@@ -29,7 +29,8 @@ export const getFavoriteArtists = async (session: Session): Promise<IArtist[]> =
     artists = config.artists.map(artist => {
       return {
         name: artist.name,
-        image: artist.image
+        image: artist.image,
+        spotifyId: artist.spotifyId
       }
     });
   } else {
