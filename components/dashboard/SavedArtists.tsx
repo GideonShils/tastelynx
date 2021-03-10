@@ -1,4 +1,4 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { SimpleGrid } from '@chakra-ui/react';
 import ArtistCard from '@components/dashboard/ArtistCard';
 import { IArtist } from '@lib/spotify';
 
@@ -17,19 +17,19 @@ const SavedArtists: React.FC<ISavedArtistProps> = ({ artists, refreshData }) => 
       body: JSON.stringify({
         artist: artist
       })
-    })
+    });
 
     console.log('refreshing from saved');
     refreshData();
-  }
+  };
 
   return (
-    <SimpleGrid columns={4} spacing={4} p='4'>
-      { artists.map(artist => {
-        return <ArtistCard key={artist.name} artist={artist} isSaved onStarClick={ onRemoveClick } />
-      }) }
+    <SimpleGrid columns={4} spacing={4} p="4">
+      {artists.map((artist) => {
+        return <ArtistCard key={artist.name} artist={artist} isSaved onStarClick={onRemoveClick} />;
+      })}
     </SimpleGrid>
-  )
-}
+  );
+};
 
 export default SavedArtists;

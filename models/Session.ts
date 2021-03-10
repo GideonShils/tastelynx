@@ -15,8 +15,8 @@ const SessionSchema = new Schema({
   sessionToken: String,
   accessToken: String,
   createdAt: Number,
-  updatedAt: Number,
-})
+  updatedAt: Number
+});
 
 const Session = models.Session || model<ISession>('Session', SessionSchema);
 
@@ -25,5 +25,5 @@ export default Session;
 export const findSession = async (accessToken: string): Promise<ISession | null> => {
   return Session.findOne({
     accessToken: accessToken
-  })
+  });
 };

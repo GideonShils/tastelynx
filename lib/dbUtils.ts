@@ -1,27 +1,29 @@
 import { Session } from 'next-auth/client';
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 import moment from 'moment';
 import querystring from 'querystring';
 
 import { IAccount, findAccount, addNewAccessToken } from '@models/Account';
 import { findSession } from '@models/Session';
 
-const SPOTIFY_AUTHORIZATION_URL = "https://accounts.spotify.com/api/token";
+const SPOTIFY_AUTHORIZATION_URL = 'https://accounts.spotify.com/api/token';
 
-export const refreshSpotifyOauthToken = async (account: IAccount) => {
-  const encodedClientString = Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString('base64');
+export const refreshSpotifyOauthToken = async (account: IAccount): Promise<string> => {
+  const encodedClientString = Buffer.from(
+    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+  ).toString('base64');
 
   const body = querystring.stringify({
     grant_type: 'refresh_token',
-    refresh_token: account.refreshToken,
+    refresh_token: account.refreshToken
   });
-  
+
   const tokenResponse = await fetch(SPOTIFY_AUTHORIZATION_URL, {
     headers: {
-      "Authorization": `Basic ${encodedClientString}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${encodedClientString}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    method: "POST",
+    method: 'POST',
     body: body
   });
 
@@ -30,14 +32,14 @@ export const refreshSpotifyOauthToken = async (account: IAccount) => {
   await addNewAccessToken(account, tokenJson.access_token);
 
   return tokenJson.access_token;
-}
+};
 
-export const getUserIdFromSession = async(userSession: Session): Promise<string> => {
+export const getUserIdFromSession = async (userSession: Session): Promise<string> => {
   await connectToDatabase();
 
   if (userSession?.accessToken) {
-    const accessToken = userSession.accessToken
-    const sessionObject = await findSession(accessToken)
+    const accessToken = userSession.accessToken;
+    const sessionObject = await findSession(accessToken);
 
     if (sessionObject) {
       return sessionObject.userId;
@@ -45,9 +47,9 @@ export const getUserIdFromSession = async(userSession: Session): Promise<string>
   }
 
   throw new Error('No access token found');
-}
+};
 
-export const getSpotifyOauthToken = async (userSession: Session) => {
+export const getSpotifyOauthToken = async (userSession: Session): Promise<string> => {
   await connectToDatabase();
 
   const userId = await getUserIdFromSession(userSession);
@@ -66,11 +68,11 @@ export const getSpotifyOauthToken = async (userSession: Session) => {
   }
 
   throw new Error('No access token found');
-}
+};
 
-export default async function connectToDatabase() {
+export default async function connectToDatabase(): Promise<Mongoose | void> {
   if (mongoose.connection.readyState >= 1) {
-    return
+    return;
   }
 
   if (process.env.DB_URI) {
@@ -78,8 +80,8 @@ export default async function connectToDatabase() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
-      useCreateIndex: true,
-    })
+      useCreateIndex: true
+    });
   } else {
     throw new Error('No DB_URI is defined');
   }

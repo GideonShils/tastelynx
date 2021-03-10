@@ -22,9 +22,8 @@ const AccountSchema: Schema = new Schema({
   accessToken: String,
   accessTokenExpires: String,
   createdAt: String,
-  updatedAt: String,
-})
-
+  updatedAt: String
+});
 
 const Account = models.Account || model<IAccount>('Account', AccountSchema);
 
@@ -33,12 +32,15 @@ export default Account;
 export const findAccount = async (userId: string): Promise<IAccount | null> => {
   return Account.findOne({
     userId: userId
-  })
+  });
 };
 
-export const addNewAccessToken = async (account: IAccount, newAccessToken: string,) => {
+export const addNewAccessToken = async (
+  account: IAccount,
+  newAccessToken: string
+): Promise<IAccount> => {
   account.accessToken = newAccessToken;
   account.updatedAt = moment().format();
 
   return account.save();
-}
+};

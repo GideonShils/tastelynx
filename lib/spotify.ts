@@ -13,18 +13,18 @@ const spotifyApi = new SpotifyWebApi();
 const setAuthToken = async (session: Session) => {
   const spotifyOauthToken = await getSpotifyOauthToken(session);
   spotifyApi.setAccessToken(spotifyOauthToken);
-}
+};
 
-export const getTopArtists = async (session: Session) => {
+export const getTopArtists = async (session: Session): Promise<IArtist[]> => {
   await setAuthToken(session);
 
   const response = await spotifyApi.getMyTopArtists();
-  
+
   const artists: IArtist[] = response.body.items.map((artist) => ({
     name: artist.name,
     image: artist.images[0].url,
-    spotifyId: artist.id,
+    spotifyId: artist.id
   }));
 
-  return artists
-}
+  return artists;
+};

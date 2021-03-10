@@ -7,12 +7,11 @@ interface IUser extends Document {
   updatedAt: number;
 }
 
-
 const UserSchema: Schema = new Schema({
   name: String,
   image: String,
   createdAt: Number,
-  updatedAt: Number,
-})
+  updatedAt: Number
+});
 
 export default models.User || model<IUser>('User', UserSchema);
