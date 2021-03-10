@@ -9,7 +9,7 @@ interface ISavedArtistProps {
 
 const SavedArtists: React.FC<ISavedArtistProps> = ({ artists, refreshData }) => {
   const onRemoveClick = async (artist: IArtist) => {
-    await fetch(`/api/artists/${artist.name}`, {
+    await fetch(`/api/artists/${artist.spotifyId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -19,7 +19,6 @@ const SavedArtists: React.FC<ISavedArtistProps> = ({ artists, refreshData }) => 
       })
     });
 
-    console.log('refreshing from saved');
     refreshData();
   };
 

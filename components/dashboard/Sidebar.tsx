@@ -1,7 +1,9 @@
-import { Button, Stack, Icon } from '@chakra-ui/react';
+import { Button, Stack, Icon, Divider } from '@chakra-ui/react';
 import { FaHeart } from 'react-icons/fa';
 import { IoMdPerson } from 'react-icons/io';
 import { Page } from '@constants/dashboardConstants';
+import { RepeatIcon } from '@chakra-ui/icons';
+
 
 const options = [
   {
@@ -22,6 +24,10 @@ interface ISidebarProps {
 }
 
 const Sidebar: React.FC<ISidebarProps> = ({ setActivePage, activePage }) => {
+  const onUpdateClick = async () => {
+    await fetch('/api/spotify/update-playlist');
+  };
+
   return (
     <Stack p="5" direction="column" width="xs">
       {options.map((option) => {
@@ -36,6 +42,16 @@ const Sidebar: React.FC<ISidebarProps> = ({ setActivePage, activePage }) => {
           </Button>
         );
       })}
+
+      <Divider mt="4" mb="4" />
+
+      <Button
+        colorScheme="teal"
+        justifyContent="flex-start"
+        leftIcon={<RepeatIcon />}
+        onClick={onUpdateClick}>
+        Update Playlist
+      </Button>
     </Stack>
   );
 };

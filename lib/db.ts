@@ -1,6 +1,12 @@
-import { removeArtistFromConfig, saveArtistToConfig, getConfig, IConfig } from './../models/Config';
+import {
+  removeArtistFromConfig,
+  saveArtistToConfig,
+  getConfig,
+  IConfig,
+  getPlaylistIdFromConfig
+} from '@models/Config';
 import { Session } from 'next-auth/client';
-import connectToDatabase, { getUserIdFromSession } from './dbUtils';
+import connectToDatabase, { getUserIdFromSession } from '@lib/dbUtils';
 import { IArtist } from '@lib/spotify';
 
 export const saveArtist = async (session: Session, artist: IArtist): Promise<IConfig | null> => {
@@ -38,4 +44,11 @@ export const getFavoriteArtists = async (session: Session): Promise<IArtist[]> =
   }
 
   return artists;
+};
+
+export const getPlaylistId = async (session: Session): Promise<string | null> => {
+  await connectToDatabase();
+
+  const userId = await getUserIdFromSession(session);
+  return await getPlaylistIdFromConfig(userId);
 };

@@ -9,7 +9,7 @@ interface IDiscoverArtistProps {
 
 const DiscoverArtists: React.FC<IDiscoverArtistProps> = ({ artists, refreshData }) => {
   const onSaveClick = async (artist: IArtist) => {
-    await fetch(`/api/artists/${artist.name}`, {
+    await fetch(`/api/artists/${artist.spotifyId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -19,7 +19,6 @@ const DiscoverArtists: React.FC<IDiscoverArtistProps> = ({ artists, refreshData 
       })
     });
 
-    console.log('refreshing from discover');
     refreshData();
   };
 

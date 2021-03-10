@@ -1,4 +1,4 @@
-<h1 align="center">WORK IN PROGRESS - Taste Lynx (for now...)</h1>
+<h1 align="center">Taste Lynx</h1>
 <p align="center">Automagically recieve new releases from your favorite spotify artists.</p>
 
 ## Features
@@ -20,11 +20,13 @@
 - [x] Authentication + refresh tokens
 - [x] Db storage
 - [x] Spotify api access
+- [x] Save artists
+- [x] Remove saved artists
+- [x] Trigger playlist update with most recent tracks
 
 ## Todo
 
 - [ ] Search for artists
-- [ ] Save favorite artists
 - [ ] Design homepage
 - [ ] Cron job to check for releases every day
 

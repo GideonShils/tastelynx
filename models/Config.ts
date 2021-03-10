@@ -49,6 +49,7 @@ export const saveArtistToConfig = async (
     existingConfig = await createConfig(userId);
   }
 
+  // TODO: Ensure the new artist doesn't already exist in the config.
   existingConfig.artists.push(artist);
 
   return existingConfig.save();
@@ -69,6 +70,35 @@ export const removeArtistFromConfig = async (
   existingConfig.artists = existingConfig.artists.filter(
     (existingArtist) => existingArtist.spotifyId != artist.spotifyId
   );
+
+  return existingConfig.save();
+};
+
+export const getPlaylistIdFromConfig = async (userId: string): Promise<string | null> => {
+  const existingConfig: IConfig | null = await Config.findOne({
+    userId: userId
+  });
+
+  if (!existingConfig) {
+    throw new Error('No existing configuration was found for this user');
+  }
+
+  return existingConfig.playlistId;
+};
+
+export const addPlaylistIdToConfig = async (
+  userId: string,
+  playlistId: string
+): Promise<IConfig> => {
+  const existingConfig: IConfig | null = await Config.findOne({
+    userId: userId
+  });
+
+  if (!existingConfig) {
+    throw new Error('No existing configuration was found for this user');
+  }
+
+  existingConfig.playlistId = playlistId;
 
   return existingConfig.save();
 };
