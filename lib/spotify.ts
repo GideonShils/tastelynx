@@ -1,5 +1,5 @@
 import SpotifyWebApi from 'spotify-web-api-node';
-import { getSpotifyOauthToken } from '@lib/dbUtils';
+import { getSpotifyOauthTokenFromUserId, getSpotifyOauthTokenFromSession } from '@lib/dbUtils';
 import { Session } from 'next-auth/client';
 import { PLAYLIST_DESCRIPTION, PLAYLIST_NAME } from '@constants/spotifyConstants';
 import { getUserIdFromSession } from '@lib/dbUtils';
@@ -13,13 +13,18 @@ export interface IArtist {
 
 const spotifyApi = new SpotifyWebApi();
 
-const setAuthToken = async (session: Session) => {
-  const spotifyOauthToken = await getSpotifyOauthToken(session);
+const setAuthTokenFromSession = async (session: Session) => {
+  const spotifyOauthToken = await getSpotifyOauthTokenFromSession(session);
   spotifyApi.setAccessToken(spotifyOauthToken);
 };
 
-export const getTopArtists = async (session: Session): Promise<IArtist[]> => {
-  await setAuthToken(session);
+const setAuthTokenFromUserId = async (userId: string) => {
+  const spotifyOauthToken = await getSpotifyOauthTokenFromUserId(userId);
+  spotifyApi.setAccessToken(spotifyOauthToken); 
+}
+
+export const getTopArtists = async (userId: string): Promise<IArtist[]> => {
+  await setAuthTokenFromUserId(userId);
 
   const response = await spotifyApi.getMyTopArtists();
 
@@ -33,11 +38,11 @@ export const getTopArtists = async (session: Session): Promise<IArtist[]> => {
 };
 
 export const updatePlaylist = async (
-  session: Session,
+  userId: string,
   playlistId: string,
   artists: IArtist[]
 ): Promise<void> => {
-  await setAuthToken(session);
+  await setAuthTokenFromUserId(userId);
 
   const recentTracks = await getRecentTracksForAllArtists(artists);
   const nonAddedTracks = await getNonAddedTracks(playlistId, recentTracks);
@@ -48,7 +53,7 @@ export const updatePlaylist = async (
 };
 
 export const createPlaylist = async (session: Session): Promise<string> => {
-  await setAuthToken(session);
+  await setAuthTokenFromSession(session);
 
   const response = await spotifyApi.createPlaylist(PLAYLIST_NAME, {
     description: PLAYLIST_DESCRIPTION

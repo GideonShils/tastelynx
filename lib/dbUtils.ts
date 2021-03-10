@@ -49,10 +49,29 @@ export const getUserIdFromSession = async (userSession: Session): Promise<string
   throw new Error('No access token found');
 };
 
-export const getSpotifyOauthToken = async (userSession: Session): Promise<string> => {
+export const getSpotifyOauthTokenFromSession = async (userSession: Session): Promise<string> => {
   await connectToDatabase();
 
   const userId = await getUserIdFromSession(userSession);
+
+  const account = await findAccount(userId);
+
+  if (account) {
+    const lastTokenIssueDate = moment(account.updatedAt);
+    const now = moment();
+
+    if (lastTokenIssueDate.add(59, 'minutes') < now) {
+      return refreshSpotifyOauthToken(account);
+    } else {
+      return account.accessToken;
+    }
+  }
+
+  throw new Error('No access token found');
+};
+
+export const getSpotifyOauthTokenFromUserId = async (userId: string): Promise<string> => {
+  await connectToDatabase();
 
   const account = await findAccount(userId);
 

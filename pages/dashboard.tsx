@@ -10,6 +10,7 @@ import SavedArtists from '@components/dashboard/SavedArtists';
 import Sidebar from '@components/dashboard/Sidebar';
 import { Page } from '@constants/dashboardConstants';
 import { getFavoriteArtists } from '@lib/db';
+import { getUserIdFromSession } from '@lib/dbUtils';
 
 interface IDashboardProps {
   topArtists: IArtist[];
@@ -61,8 +62,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const topArtists = await getTopArtists(session);
-  const savedArtists = await getFavoriteArtists(session);
+  const userId = await getUserIdFromSession(session);
+
+  const topArtists = await getTopArtists(userId);
+  const savedArtists = await getFavoriteArtists(userId);
 
   return {
     props: {
