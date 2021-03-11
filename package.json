@@ -26,6 +26,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-icons": "^4.2.0",
+    "semver": "^7.3.4",
     "spotify-web-api-node": "^5.0.2",
     "swr": "^0.4.2"
   },

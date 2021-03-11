@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
   }
 
   const { artist } = req.body;
-  
+
   const userId = await getUserIdFromSession(session);
 
   if (req.method == 'POST') {
