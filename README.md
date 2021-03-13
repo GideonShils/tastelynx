@@ -28,12 +28,14 @@
 - [x] Save artists
 - [x] Remove saved artists
 - [x] Trigger playlist update with most recent tracks
+- [x] Design homepage
+- [x] Cron job to check for releases every day
 
 ## Todo
 
 - [ ] Search for artists
-- [ ] Design homepage
-- [ ] Cron job to check for releases every day
+- [ ] General UI improvements
+- [ ] Make dashboard responsive
 
 ## How to run locally
 

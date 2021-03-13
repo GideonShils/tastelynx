@@ -3,7 +3,9 @@ import {
   saveArtistToConfig,
   getConfig,
   IConfig,
-  getPlaylistIdFromConfig
+  getPlaylistIdFromConfig,
+  getAllConfigs,
+  addPlaylistIdToConfig
 } from '@models/Config';
 import connectToDatabase from '@lib/dbUtils';
 import { IArtist } from '@lib/spotify';
@@ -43,4 +45,14 @@ export const getFavoriteArtists = async (userId: string): Promise<IArtist[]> => 
 export const getPlaylistId = async (userId: string): Promise<string | null> => {
   await connectToDatabase();
   return await getPlaylistIdFromConfig(userId);
+};
+
+export const addPlaylistId = async (userId: string, playlistId: string): Promise<IConfig> => {
+  await connectToDatabase();
+  return await addPlaylistIdToConfig(userId, playlistId);
+};
+
+export const getConfigs = async (): Promise<IConfig[]> => {
+  await connectToDatabase();
+  return await getAllConfigs();
 };

@@ -3,7 +3,7 @@ import { getSpotifyOauthTokenFromUserId, getSpotifyOauthTokenFromSession } from 
 import { Session } from 'next-auth/client';
 import { PLAYLIST_DESCRIPTION, PLAYLIST_NAME } from '@constants/spotifyConstants';
 import { getUserIdFromSession } from '@lib/dbUtils';
-import { addPlaylistIdToConfig } from '@models/Config';
+import { getConfigs, getFavoriteArtists, addPlaylistId } from '@lib/db';
 
 export interface IArtist {
   name: string;
@@ -20,8 +20,8 @@ const setAuthTokenFromSession = async (session: Session) => {
 
 const setAuthTokenFromUserId = async (userId: string) => {
   const spotifyOauthToken = await getSpotifyOauthTokenFromUserId(userId);
-  spotifyApi.setAccessToken(spotifyOauthToken); 
-}
+  spotifyApi.setAccessToken(spotifyOauthToken);
+};
 
 export const getTopArtists = async (userId: string): Promise<IArtist[]> => {
   await setAuthTokenFromUserId(userId);
@@ -35,6 +35,25 @@ export const getTopArtists = async (userId: string): Promise<IArtist[]> => {
   }));
 
   return artists;
+};
+
+export const updateAllPlaylists = async (): Promise<void> => {
+  const allConfigs = await getConfigs();
+
+  const playlistUpdatePromises = allConfigs.map(async (config) => {
+    const userId = config.userId;
+    const playlistId = config.playlistId;
+
+    const favoriteArtists = await getFavoriteArtists(userId);
+
+    if (playlistId) {
+      // TODO: Ensure playlist actually exists
+      updatePlaylist(userId, playlistId, favoriteArtists);
+    }
+  });
+
+  await Promise.all(playlistUpdatePromises);
+  Promise.resolve();
 };
 
 export const updatePlaylist = async (
@@ -63,7 +82,7 @@ export const createPlaylist = async (session: Session): Promise<string> => {
 
   const userId = await getUserIdFromSession(session);
 
-  await addPlaylistIdToConfig(userId, playlistId);
+  await addPlaylistId(userId, playlistId);
 
   return playlistId;
 };
